@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api'; // Replace with your backend URL
+const API_BASE_URL = 'http://localhost:8080/api'; // Replace with your backend URL
 
 export const fetchFlights = async (airportId) => {
     const response = await fetch(`${API_BASE_URL}/flights?airport=${airportId}`);
