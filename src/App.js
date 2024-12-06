@@ -6,10 +6,13 @@ import AirportDetailsPage from './pages/AirportDetailsPage';
 import AirlinesPage from './pages/AirlinesPage';
 import GatesPage from './pages/GatesPage';
 import ErrorPage from './pages/ErrorPage';
+import Navigation from './components/Navigation';
 
 const App = () => {
     return (
         <Router>
+        <div>
+          <Navigation />
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/admin" element={<AdminPage />} />
@@ -18,6 +21,7 @@ const App = () => {
                 <Route path="/gates" element={<GatesPage />} />
                 <Route path="*" element={<ErrorPage />} />
             </Routes>
+            </div>
         </Router>
     );
 };
