@@ -35,8 +35,10 @@ h1 {
     border-radius: 10px;
 }
 
-.center-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.page-li {
+    background-color: rgba(0, 0, 0, 0.3); /* Add a semi-transparent background for content */
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    text-align: center;
 }
