@@ -1,37 +1,60 @@
-import React, { useState } from 'react';
+// FlightForm.js
+import React from 'react';
 
-const FlightForm = ({ onSubmit }) => {
-    const [flightData, setFlightData] = useState({
-        flightNumber: '',
-        airline: '',
-        origin: '',
-        destination: '',
-        time: '',
-        status: '',
-    });
-
-    const handleChange = (e) => {
-        setFlightData({
-            ...flightData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit(flightData);
-    };
-
+const FlightForm = ({ formData, handleChange, handleSubmit }) => {
     return (
+    <>
+    <h2>Create Flight</h2>
         <form onSubmit={handleSubmit}>
-            <input name="flightNumber" placeholder="Flight Number" onChange={handleChange} required />
-            <input name="airline" placeholder="Airline" onChange={handleChange} required />
-            <input name="origin" placeholder="Origin" onChange={handleChange} required />
-            <input name="destination" placeholder="Destination" onChange={handleChange} required />
-            <input type="datetime-local" name="time" onChange={handleChange} required />
-            <input name="status" placeholder="Status" onChange={handleChange} required />
-            <button type="submit">Submit</button>
+            <input
+                type="text"
+                name="flightNumber"
+                placeholder="Flight Number"
+                value={formData.flightNumber}
+                onChange={handleChange}
+                required
+            />
+            <input
+                type="datetime-local"
+                name="departureTime"
+                value={formData.departureTime}
+                onChange={handleChange}
+                required
+            />
+            <input
+                type="datetime-local"
+                name="arrivalTime"
+                value={formData.arrivalTime}
+                onChange={handleChange}
+                required
+            />
+            <input
+                type="number"
+                name="originAirportId"
+                placeholder="Origin Airport ID"
+                value={formData.originAirportId}
+                onChange={handleChange}
+                required
+            />
+            <input
+                type="number"
+                name="destinationAirportId"
+                placeholder="Destination Airport ID"
+                value={formData.destinationAirportId}
+                onChange={handleChange}
+                required
+            />
+            <input
+                type="number"
+                name="aircraftId"
+                placeholder="Aircraft ID"
+                value={formData.aircraftId}
+                onChange={handleChange}
+                required
+            />
+            <button type="submit">Create Flight</button>
         </form>
+        </>
     );
 };
 

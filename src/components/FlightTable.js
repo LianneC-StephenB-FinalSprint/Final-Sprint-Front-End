@@ -1,14 +1,20 @@
 import React from 'react';
 
 const FlightTable = ({ flights }) => {
+    if (!flights || flights.length === 0) {
+        return <p>No flights available.</p>;
+    }
+
     return (
         <table>
             <thead>
                 <tr>
                     <th>Flight Number</th>
                     <th>Airline</th>
-                    <th>Origin/Destination</th>
-                    <th>Time</th>
+                    <th>Aircraft</th>
+                    <th>Departure/Arrival</th>
+                    <th>Gate</th>
+                    <th>Terminal</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -16,10 +22,16 @@ const FlightTable = ({ flights }) => {
                 {flights.map((flight) => (
                     <tr key={flight.id}>
                         <td>{flight.flightNumber}</td>
-                        <td>{flight.airline}</td>
-                        <td>{flight.origin || flight.destination}</td>
-                        <td>{flight.time}</td>
-                        <td>{flight.status}</td>
+                        <td>{flight.airline.name}</td>
+                        <td>{flight.aircraft.type}</td>
+                        <td>
+                            {flight.departureTime
+                                ? `Departs: ${new Date(flight.departureTime).toLocaleString()}`
+                                : `Arrives: ${new Date(flight.arrivalTime).toLocaleString()}`}
+                        </td>
+                        <td>{flight.gate.name}</td>
+                        <td>{flight.gate.terminal}</td>
+                        <td>{flight.status || 'Scheduled'}</td>
                     </tr>
                 ))}
             </tbody>
