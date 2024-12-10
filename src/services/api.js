@@ -82,3 +82,12 @@ export const createAirline = async (airlineData) => {
     });
     return response.json();
 };
+
+export const deleteFlight = async (flightId) => {
+    const response = await fetch(`${API_BASE_URL}/flights/${flightId}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        throw new Error('Failed to delete flight');
+    }
+};
