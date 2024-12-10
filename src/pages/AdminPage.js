@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { createFlight, createGate, createAirline, fetchAirports, fetchAirlines, fetchGates, fetchAircraft, fetchFlights, deleteFlight } from '../services/api';
+import { createFlight, createGate, createAirline, createAircraft, createAirport, createCity, fetchAirports, fetchCities, fetchAirlines, fetchGates, fetchAircraft, fetchFlights, deleteFlight } from '../services/api';
 import FlightForm from '../components/FlightForm';
 import GateForm from '../components/GateForm';
 import AirlineForm from '../components/AirlineForm';
+import AirportForm from '../components/AirportForm';
+import CityForm from '../components/CityForm';
 import DeleteFlightForm from '../components/DeleteFlightForm';
 import backgroundImage from '../assets/Background01.jpg';
 import image from '../assets/Airplane01.png';
+import AircraftForm from '../components/AircraftForm'; // Import the AircraftForm component
 
 const AdminPage = () => {
     const [formData, setFormData] = useState({
@@ -29,6 +32,25 @@ const AdminPage = () => {
         code: '',
     });
 
+    const [aircraftData, setAircraftData] = useState({
+        airlineName: '',
+        type: '',
+        numberOfPassengers: '',
+    });
+
+    const [airportFormData, setAirportFormData] = useState({
+        name: '',
+        code: '',
+        cityId: '', // Store the city ID here
+    });
+
+
+    const [cityFormData, setCityFormData] = useState({
+        name: '',
+        state: '',
+        population: '',
+    });
+
     const [airports, setAirports] = useState([]);
     const [airlines, setAirlines] = useState([]);
     const [gates, setGates] = useState([]);
@@ -37,6 +59,7 @@ const AdminPage = () => {
     const [selectedFlightId, setSelectedFlightId] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [cities, setCities] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -55,6 +78,9 @@ const AdminPage = () => {
 
                 const flightData = await fetchFlights();
                 setFlights(flightData);
+
+                const cityData = await fetchCities(); // Fetch cities
+                setCities(cityData);
             } catch (err) {
                 console.error('Error fetching data:', err);
             }
@@ -76,6 +102,21 @@ const AdminPage = () => {
     const handleAirlineChange = (e) => {
         const { name, value } = e.target;
         setAirlineData({ ...airlineData, [name]: value });
+    };
+
+    const handleAircraftChange = (e) => {
+        const { name, value } = e.target;
+        setAircraftData({ ...aircraftData, [name]: value });
+    };
+
+    const handleAirportFormChange = (e) => {
+        const { name, value } = e.target;
+        setAirportFormData({ ...airportFormData, [name]: value });
+    };
+
+    const handleCityFormChange = (e) => {
+        const { name, value } = e.target;
+        setCityFormData({ ...cityFormData, [name]: value });
     };
 
     const handleFlightSubmit = async (e) => {
@@ -120,61 +161,129 @@ const AdminPage = () => {
     };
 
     const handleDelete = async (e) => {
+        e.preventDefault();
+        setError('');
+        setMessage('');
+
+        if (!selectedFlightId) {
+            setError('Please select a flight to delete.');
+            return;
+        }
+
+        try {
+            await deleteFlight(selectedFlightId);
+            setMessage('Flight deleted successfully!');
+            setSelectedFlightId('');
+            const updatedFlights = await fetchFlights();
+            setFlights(updatedFlights);
+        } catch (err) {
+            setError('Failed to delete flight.');
+        }
+    };
+
+    const handleGateSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setMessage('');
+        try {
+            const payload = {
+                name: gateData.name,
+                terminal: gateData.terminal,
+            };
+            await createGate(payload);
+            setMessage('Gate created successfully!');
+            setGateData({ name: '', terminal: '' });
+        } catch (err) {
+            setError('Failed to create gate. Please check the input.');
+        }
+    };
+
+    const handleAirlineSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setMessage('');
+        try {
+            const payload = {
+                name: airlineData.name,
+                code: airlineData.code,
+            };
+            await createAirline(payload);
+            setMessage('Airline created successfully!');
+            setAirlineData({ name: '', code: '' });
+        } catch (err) {
+            setError('Failed to create airline. Please check the input.');
+        }
+    };
+
+    const handleAircraftSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setMessage('');
+        try {
+            const payload = {
+                airlineName: aircraftData.airlineName,
+                type: aircraftData.type,
+                numberOfPassengers: aircraftData.numberOfPassengers,
+            };
+            await createAircraft(payload);
+            setMessage('Aircraft created successfully!');
+            setAircraftData({ airlineName: '', type: '', numberOfPassengers: '' });
+        } catch (err) {
+            setError('Failed to create aircraft. Please check the input.');
+        }
+    };
+
+    const handleAirportSubmit = async (e) => {
             e.preventDefault();
             setError('');
             setMessage('');
 
-            if (!selectedFlightId) {
-                setError('Please select a flight to delete.');
+            if (!airportFormData.name || !airportFormData.code || !airportFormData.cityId) {
+                setError('Please fill in all the required fields.');
                 return;
             }
 
             try {
-                await deleteFlight(selectedFlightId);
-                setMessage('Flight deleted successfully!');
-                setSelectedFlightId('');
-                const updatedFlights = await fetchFlights();
-                setFlights(updatedFlights);
-            } catch (err) {
-                setError('Failed to delete flight.');
-            }
-        };
-
-     const handleGateSubmit = async (e) => {
-            e.preventDefault();
-            setError('');
-            setMessage('');
-            try {
                 const payload = {
-                    name: gateData.name,
-                    terminal: gateData.terminal,
+                    name: airportFormData.name,
+                    code: airportFormData.code,
+                    city: { id: airportFormData.cityId }, // Send the city ID here
                 };
-                await createGate(payload);
-                setMessage('Gate created successfully!');
-                setGateData({ name: '', terminal: '' });
+
+                await createAirport(payload);
+                setMessage('Airport created successfully!');
+                setAirportFormData({ name: '', code: '', cityId: '' });
+                const updatedAirports = await fetchAirports();
+                setAirports(updatedAirports);
             } catch (err) {
-                setError('Failed to create gate. Please check the input.');
+                setError('Failed to create airport. Please check the input.');
             }
         };
 
-        const handleAirlineSubmit = async (e) => {
-            e.preventDefault();
-            setError('');
-            setMessage('');
-            try {
-                const payload = {
-                    name: airlineData.name,
-                    code: airlineData.code,
-                };
-                await createAirline(payload);
-                setMessage('Airline created successfully!');
-                setAirlineData({ name: '', code: '' });
-            } catch (err) {
-                setError('Failed to create airline. Please check the input.');
-            }
-        };
+         const handleCitySubmit = async (e) => {
+                e.preventDefault();
+                setError('');
+                setMessage('');
 
+                if (!cityFormData.name || !cityFormData.state || !cityFormData.population) {
+                    setError('Please fill in all the required fields.');
+                    return;
+                }
 
+                try {
+                    const payload = {
+                        name: cityFormData.name,
+                        state: cityFormData.state,
+                        population: cityFormData.population,
+                    };
+
+                    await createCity(payload);
+                    setMessage('City created successfully!');
+                    setCityFormData({ name: '', state: '', population: '' });
+                } catch (err) {
+                    setError('Failed to create city. Please check the input.');
+                }
+            };
 
     const handleSelectChange = (e) => {
         setSelectedFlightId(e.target.value);
@@ -226,6 +335,29 @@ const AdminPage = () => {
                         handleSubmit={handleAirlineSubmit}
                     />
                 </div>
+                <div className="page-li">
+                    <AircraftForm
+                        formData={aircraftData}
+                        handleChange={handleAircraftChange}
+                        handleSubmit={handleAircraftSubmit}
+                    />
+                </div>
+                <div className="page-li">
+                    <CityForm
+                        formData={cityFormData}
+                        handleChange={handleCityFormChange}
+                        handleSubmit={handleCitySubmit}
+                    />
+                </div>
+                <div className="page-li">
+                <AirportForm
+                                formData={airportFormData}
+                                handleChange={handleAirportFormChange}
+                                handleSubmit={handleAirportSubmit}
+                                cities={cities} // Pass cities data to the form
+                    />
+                </div>
+
                 {message && <p style={{ color: 'green' }}>{message}</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>

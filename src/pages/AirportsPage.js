@@ -25,7 +25,7 @@ const AirportsPage = () => {
                 <ul>
                     {airports.map((airport) => (
                         <li key={airport.id} className="page-li">
-                            {airport.name} ({airport.code}) - {airport.location}
+                            {airport.name} ({airport.code}) - {airport.cityName}
                         </li>
                     ))}
                 </ul>
