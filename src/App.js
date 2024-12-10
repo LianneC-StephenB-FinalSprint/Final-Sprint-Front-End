@@ -5,6 +5,7 @@ import AdminPage from './pages/AdminPage';
 import AirportDetailsPage from './pages/AirportDetailsPage';
 import AirlinesPage from './pages/AirlinesPage';
 import GatesPage from './pages/GatesPage';
+import FlightsPage from './pages/FlightsPage';
 import ErrorPage from './pages/ErrorPage';
 import Navigation from './components/Navigation';
 
@@ -40,6 +41,7 @@ const App = () => {
                     <Route path="/airport/:id" element={<AirportDetailsPage airports={airports} />} />
                     <Route path="/airlines" element={<AirlinesPage />} />
                     <Route path="/gates" element={<GatesPage />} />
+                    <Route path="/flights" element={<FlightsPage />} />
                     <Route path="*" element={<ErrorPage />} />
                 </Routes>
             </div>

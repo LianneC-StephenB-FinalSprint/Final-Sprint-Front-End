@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FlightTable = ({ flights }) => {
     if (!flights || flights.length === 0) {
         return <p>No flights available.</p>;
@@ -11,10 +9,10 @@ const FlightTable = ({ flights }) => {
                 <tr>
                     <th>Flight Number</th>
                     <th>Airline</th>
-                    <th>Aircraft</th>
                     <th>Departure/Arrival</th>
+                    <th>Origin Airport</th>
+                    <th>Destination Airport</th>
                     <th>Gate</th>
-                    <th>Terminal</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -22,16 +20,16 @@ const FlightTable = ({ flights }) => {
                 {flights.map((flight) => (
                     <tr key={flight.id}>
                         <td>{flight.flightNumber}</td>
-                        <td>{flight.airline?.name || 'N/A'}</td>
-                        <td>{flight.aircraft?.type || 'N/A'}</td>
+                        <td>{flight.airlineName}</td> {/* Updated field */}
                         <td>
                             {flight.departureTime
                                 ? `Departs: ${new Date(flight.departureTime).toLocaleString()}`
                                 : `Arrives: ${new Date(flight.arrivalTime).toLocaleString()}`}
                         </td>
-                        <td>{flight.gate?.name || 'N/A'}</td>
-                        <td>{flight.gate?.terminal || 'N/A'}</td>
-                        <td>{flight.status || 'Scheduled'}</td>
+                        <td>{flight.originAirportName || 'Unknown Airport'}</td> {/* Fallback value */}
+                        <td>{flight.destinationAirportName || 'Unknown Airport'}</td> {/* Fallback value */}
+                        <td>{flight.gateName || 'Unknown Gate'}</td> {/* Fallback value */}
+                        <td>{flight.status || 'Scheduled'}</td> {/* Handle status if available */}
                     </tr>
                 ))}
             </tbody>
