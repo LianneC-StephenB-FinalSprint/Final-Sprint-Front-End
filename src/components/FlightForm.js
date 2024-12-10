@@ -2,6 +2,8 @@ import React from 'react';
 
 const FlightForm = ({ formData, handleChange, handleSubmit, airports, airlines, gates, aircraft }) => {
     return (
+    <>
+    <h2>Create Flight</h2>
         <form onSubmit={handleSubmit}>
             <div>
                 <label>Flight Number:</label>
@@ -107,6 +109,7 @@ const FlightForm = ({ formData, handleChange, handleSubmit, airports, airlines, 
             </div>
             <button type="submit">Create Flight</button>
         </form>
+        </>
     );
 };
 

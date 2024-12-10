@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { createFlight, createGate, createAirline, fetchAirports, fetchAirlines, fetchGates, fetchAircraft } from '../services/api';
+import { createFlight, createGate, createAirline, fetchAirports, fetchAirlines, fetchGates, fetchAircraft, fetchFlights, deleteFlight } from '../services/api';
 import FlightForm from '../components/FlightForm';
 import GateForm from '../components/GateForm';
 import AirlineForm from '../components/AirlineForm';
+import DeleteFlightForm from '../components/DeleteFlightForm';
 import backgroundImage from '../assets/Background01.jpg';
 import image from '../assets/Airplane01.png';
 
@@ -14,7 +15,7 @@ const AdminPage = () => {
         originAirportId: '',
         destinationAirportId: '',
         aircraftId: '',
-        gateName: '', // Updated from gateId to gateName
+        gateName: '',
         airlineId: '',
     });
 
@@ -32,6 +33,8 @@ const AdminPage = () => {
     const [airlines, setAirlines] = useState([]);
     const [gates, setGates] = useState([]);
     const [aircraft, setAircraft] = useState([]);
+    const [flights, setFlights] = useState([]);
+    const [selectedFlightId, setSelectedFlightId] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
@@ -49,6 +52,9 @@ const AdminPage = () => {
 
                 const aircraftData = await fetchAircraft();
                 setAircraft(aircraftData);
+
+                const flightData = await fetchFlights();
+                setFlights(flightData);
             } catch (err) {
                 console.error('Error fetching data:', err);
             }
@@ -90,11 +96,9 @@ const AdminPage = () => {
                 originAirportId: formData.originAirportId,
                 destinationAirportId: formData.destinationAirportId,
                 aircraftId: formData.aircraftId,
-                gateName: formData.gateName, // Updated payload
+                gateName: formData.gateName,
                 airlineId: formData.airlineId,
             };
-
-            console.log('Payload:', payload);
 
             await createFlight(payload);
             setMessage('Flight created successfully!');
@@ -108,44 +112,72 @@ const AdminPage = () => {
                 gateName: '',
                 airlineId: '',
             });
+            const updatedFlights = await fetchFlights();
+            setFlights(updatedFlights);
         } catch (err) {
-            console.error('Error creating flight:', err);
             setError('Failed to create flight. Please check the input.');
         }
     };
 
-    const handleGateSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setMessage('');
-        try {
-            const payload = {
-                name: gateData.name,
-                terminal: gateData.terminal,
-            };
-            await createGate(payload);
-            setMessage('Gate created successfully!');
-            setGateData({ name: '', terminal: '' });
-        } catch (err) {
-            setError('Failed to create gate. Please check the input.');
-        }
-    };
+    const handleDelete = async (e) => {
+            e.preventDefault();
+            setError('');
+            setMessage('');
 
-    const handleAirlineSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setMessage('');
-        try {
-            const payload = {
-                name: airlineData.name,
-                code: airlineData.code,
-            };
-            await createAirline(payload);
-            setMessage('Airline created successfully!');
-            setAirlineData({ name: '', code: '' });
-        } catch (err) {
-            setError('Failed to create airline. Please check the input.');
-        }
+            if (!selectedFlightId) {
+                setError('Please select a flight to delete.');
+                return;
+            }
+
+            try {
+                await deleteFlight(selectedFlightId);
+                setMessage('Flight deleted successfully!');
+                setSelectedFlightId('');
+                const updatedFlights = await fetchFlights();
+                setFlights(updatedFlights);
+            } catch (err) {
+                setError('Failed to delete flight.');
+            }
+        };
+
+     const handleGateSubmit = async (e) => {
+            e.preventDefault();
+            setError('');
+            setMessage('');
+            try {
+                const payload = {
+                    name: gateData.name,
+                    terminal: gateData.terminal,
+                };
+                await createGate(payload);
+                setMessage('Gate created successfully!');
+                setGateData({ name: '', terminal: '' });
+            } catch (err) {
+                setError('Failed to create gate. Please check the input.');
+            }
+        };
+
+        const handleAirlineSubmit = async (e) => {
+            e.preventDefault();
+            setError('');
+            setMessage('');
+            try {
+                const payload = {
+                    name: airlineData.name,
+                    code: airlineData.code,
+                };
+                await createAirline(payload);
+                setMessage('Airline created successfully!');
+                setAirlineData({ name: '', code: '' });
+            } catch (err) {
+                setError('Failed to create airline. Please check the input.');
+            }
+        };
+
+
+
+    const handleSelectChange = (e) => {
+        setSelectedFlightId(e.target.value);
     };
 
     return (
@@ -170,6 +202,14 @@ const AdminPage = () => {
                         airlines={airlines}
                         gates={gates}
                         aircraft={aircraft}
+                    />
+                </div>
+                <div className="page-li">
+                    <DeleteFlightForm
+                        flights={flights}
+                        selectedFlightId={selectedFlightId}
+                        handleSelectChange={handleSelectChange}
+                        handleDelete={handleDelete}
                     />
                 </div>
                 <div className="page-li">
