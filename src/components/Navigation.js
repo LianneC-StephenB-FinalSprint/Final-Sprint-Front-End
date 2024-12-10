@@ -18,6 +18,9 @@ const Navigation = () => {
                 <li>
                     <Link to="/gates">Gates</Link>
                 </li>
+                <li>
+                    <Link to="/flights">Flights</Link>
+                </li>
             </ul>
         </nav>
     );

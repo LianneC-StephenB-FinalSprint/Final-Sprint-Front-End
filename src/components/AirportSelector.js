@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { fetchAirports } from '../services/api';
+import React from 'react';
 
 const AirportSelector = ({ airports, onSelectAirport }) => {
     return (
@@ -9,7 +8,7 @@ const AirportSelector = ({ airports, onSelectAirport }) => {
                 <option value="">Select an Airport</option>
                 {airports.map((airport) => (
                     <option key={airport.id} value={airport.id}>
-                        {`${airport.name} (${airport.code}) - ${airport.city.name}, ${airport.city.state}`}
+                        {`${airport.name} (${airport.code}) - ${airport.cityName}, ${airport.cityState}`}
                     </option>
                 ))}
             </select>

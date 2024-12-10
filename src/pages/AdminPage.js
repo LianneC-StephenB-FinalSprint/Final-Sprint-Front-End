@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { createFlight, createGate, createAirline } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { createFlight, createGate, createAirline, fetchAirports, fetchAirlines, fetchGates, fetchAircraft } from '../services/api';
 import FlightForm from '../components/FlightForm';
 import GateForm from '../components/GateForm';
 import AirlineForm from '../components/AirlineForm';
@@ -7,33 +7,59 @@ import backgroundImage from '../assets/Background01.jpg';
 import image from '../assets/Airplane01.png';
 
 const AdminPage = () => {
-    const [flightData, setFlightData] = useState({
+    const [formData, setFormData] = useState({
         flightNumber: '',
         departureTime: '',
         arrivalTime: '',
         originAirportId: '',
         destinationAirportId: '',
         aircraftId: '',
-        gateId: '',
+        gateName: '', // Updated from gateId to gateName
         airlineId: '',
     });
 
     const [gateData, setGateData] = useState({
         name: '',
-        terminal: ''
+        terminal: '',
     });
 
     const [airlineData, setAirlineData] = useState({
         name: '',
-        code: ''
+        code: '',
     });
 
+    const [airports, setAirports] = useState([]);
+    const [airlines, setAirlines] = useState([]);
+    const [gates, setGates] = useState([]);
+    const [aircraft, setAircraft] = useState([]);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const airportData = await fetchAirports();
+                setAirports(airportData);
+
+                const airlineData = await fetchAirlines();
+                setAirlines(airlineData);
+
+                const gateData = await fetchGates();
+                setGates(gateData);
+
+                const aircraftData = await fetchAircraft();
+                setAircraft(aircraftData);
+            } catch (err) {
+                console.error('Error fetching data:', err);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const handleFlightChange = (e) => {
         const { name, value } = e.target;
-        setFlightData({ ...flightData, [name]: value });
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleGateChange = (e) => {
@@ -50,30 +76,40 @@ const AdminPage = () => {
         e.preventDefault();
         setError('');
         setMessage('');
+
+        if (!formData.originAirportId || !formData.destinationAirportId || !formData.aircraftId || !formData.gateName || !formData.airlineId) {
+            setError('Please fill in all the required fields.');
+            return;
+        }
+
         try {
             const payload = {
-                flightNumber: flightData.flightNumber,
-                departureTime: flightData.departureTime,
-                arrivalTime: flightData.arrivalTime,
-                originAirport: { id: flightData.originAirportId },
-                destinationAirport: { id: flightData.destinationAirportId },
-                aircraft: { id: flightData.aircraftId },
-                gate: { id: flightData.gateId },
-                airline: { id: flightData.airlineId }
+                flightNumber: formData.flightNumber,
+                departureTime: formData.departureTime,
+                arrivalTime: formData.arrivalTime,
+                originAirportId: formData.originAirportId,
+                destinationAirportId: formData.destinationAirportId,
+                aircraftId: formData.aircraftId,
+                gateName: formData.gateName, // Updated payload
+                airlineId: formData.airlineId,
             };
+
+            console.log('Payload:', payload);
+
             await createFlight(payload);
             setMessage('Flight created successfully!');
-            setFlightData({
+            setFormData({
                 flightNumber: '',
                 departureTime: '',
                 arrivalTime: '',
                 originAirportId: '',
                 destinationAirportId: '',
                 aircraftId: '',
-                gateId: '',
-                airlineId: ''
+                gateName: '',
+                airlineId: '',
             });
         } catch (err) {
+            console.error('Error creating flight:', err);
             setError('Failed to create flight. Please check the input.');
         }
     };
@@ -85,7 +121,7 @@ const AdminPage = () => {
         try {
             const payload = {
                 name: gateData.name,
-                terminal: gateData.terminal
+                terminal: gateData.terminal,
             };
             await createGate(payload);
             setMessage('Gate created successfully!');
@@ -102,11 +138,11 @@ const AdminPage = () => {
         try {
             const payload = {
                 name: airlineData.name,
-                code: airlineData.code
+                code: airlineData.code,
             };
             await createAirline(payload);
             setMessage('Airline created successfully!');
-            setAirlineData({ name: '', code: '' }); // Reset the form
+            setAirlineData({ name: '', code: '' });
         } catch (err) {
             setError('Failed to create airline. Please check the input.');
         }
@@ -126,33 +162,41 @@ const AdminPage = () => {
             <div className="content-container">
                 <h1>Admin Panel</h1>
                 <div className="page-li">
-                <FlightForm
-                    formData={flightData}
-                    handleChange={handleFlightChange}
-                    handleSubmit={handleFlightSubmit}
-                />
+                    <FlightForm
+                        formData={formData}
+                        handleChange={handleFlightChange}
+                        handleSubmit={handleFlightSubmit}
+                        airports={airports}
+                        airlines={airlines}
+                        gates={gates}
+                        aircraft={aircraft}
+                    />
                 </div>
                 <div className="page-li">
-                <GateForm
-                    formData={gateData}
-                    handleChange={handleGateChange}
-                    handleSubmit={handleGateSubmit}
-                />
+                    <GateForm
+                        formData={gateData}
+                        handleChange={handleGateChange}
+                        handleSubmit={handleGateSubmit}
+                    />
                 </div>
                 <div className="page-li">
-                <AirlineForm
-                    formData={airlineData}  // Pass airlineData instead of flightData
-                    handleChange={handleAirlineChange}  // Pass handleAirlineChange to AirlineForm
-                    handleSubmit={handleAirlineSubmit}  // Pass handleAirlineSubmit to AirlineForm
-                />
+                    <AirlineForm
+                        formData={airlineData}
+                        handleChange={handleAirlineChange}
+                        handleSubmit={handleAirlineSubmit}
+                    />
                 </div>
-                {/* Display success or error message */}
                 {message && <p style={{ color: 'green' }}>{message}</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
             <div className="center-image">
-            <img className="airplane-image" src={image} alt="Airplane" style={{ width: '55%', height: 'auto', borderRadius: '10px' }} />
-        </div>
+                <img
+                    className="airplane-image"
+                    src={image}
+                    alt="Airplane"
+                    style={{ width: '55%', height: 'auto', borderRadius: '10px' }}
+                />
+            </div>
         </div>
     );
 };
