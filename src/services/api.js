@@ -9,7 +9,7 @@ export const createFlight = async (flightData) => {
     });
 
     const result = await response.json();
-    console.log(result); // Add this line to see the response in the console
+    console.log(result); // Log response for debugging
 
     if (!response.ok) {
         throw new Error('Failed to create flight');
@@ -44,6 +44,22 @@ export const fetchAircraft = async () => {
     return response.json();
 };
 
+// Create aircraft
+export const createAircraft = async (aircraftData) => {
+    const response = await fetch(`${API_BASE_URL}/aircraft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(aircraftData),
+    });
+
+    const result = await response.json();
+    console.log(result); // Log response for debugging
+
+    if (!response.ok) {
+        throw new Error('Failed to create aircraft');
+    }
+    return result;
+};
 
 // Fetch all gates
 export const fetchGates = async () => {
@@ -61,6 +77,49 @@ export const fetchAirports = async () => {
         throw new Error('Failed to fetch airports');
     }
     return response.json();
+};
+
+// Create airport
+export const createAirport = async (airportData) => {
+    const response = await fetch(`${API_BASE_URL}/airports`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(airportData),
+    });
+
+    const result = await response.json();
+    console.log(result); // Log response for debugging
+
+    if (!response.ok) {
+        throw new Error('Failed to create airport');
+    }
+    return result;
+};
+
+// Fetch all cities
+export const fetchCities = async () => {
+    const response = await fetch(`${API_BASE_URL}/cities`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch cities');
+    }
+    return response.json();
+};
+
+// Create city
+export const createCity = async (cityData) => {
+    const response = await fetch(`${API_BASE_URL}/cities`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cityData),
+    });
+
+    const result = await response.json();
+    console.log(result); // Log response for debugging
+
+    if (!response.ok) {
+        throw new Error('Failed to create city');
+    }
+    return result;
 };
 
 // Create gate

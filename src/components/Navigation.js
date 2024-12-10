@@ -21,6 +21,15 @@ const Navigation = () => {
                 <li>
                     <Link to="/flights">Flights</Link>
                 </li>
+                 <li>
+                    <Link to="/airports">Airports</Link>
+                 </li>
+                 <li>
+                    <Link to="/aircraft">Aircraft</Link>
+                 </li>
+                 <li>
+                 <Link to="/cities">Cities</Link>
+                 </li>
             </ul>
         </nav>
     );

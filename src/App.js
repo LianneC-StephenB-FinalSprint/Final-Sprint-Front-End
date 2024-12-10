@@ -7,6 +7,9 @@ import AirlinesPage from './pages/AirlinesPage';
 import GatesPage from './pages/GatesPage';
 import FlightsPage from './pages/FlightsPage';
 import ErrorPage from './pages/ErrorPage';
+import AirportsPage from './pages/AirportsPage';
+import AircraftPage from './pages/AircraftPage';
+import CitiesPage from './pages/CitiesPage';
 import Navigation from './components/Navigation';
 
 const App = () => {
@@ -42,6 +45,9 @@ const App = () => {
                     <Route path="/airlines" element={<AirlinesPage />} />
                     <Route path="/gates" element={<GatesPage />} />
                     <Route path="/flights" element={<FlightsPage />} />
+                    <Route path="/airports" element={<AirportsPage />} />
+                    <Route path="/aircraft" element={<AircraftPage />} />
+                    <Route path="/cities" element={<CitiesPage />} />
                     <Route path="*" element={<ErrorPage />} />
                 </Routes>
             </div>
