@@ -7,7 +7,6 @@ import AirportForm from '../components/AirportForm';
 import CityForm from '../components/CityForm';
 import DeleteFlightForm from '../components/DeleteFlightForm';
 import backgroundImage from '../assets/Background01.jpg';
-import image from '../assets/Airplane01.png';
 import AircraftForm from '../components/AircraftForm'; // Import the AircraftForm component
 
 const AdminPage = () => {
@@ -361,14 +360,7 @@ const AdminPage = () => {
                 {message && <p style={{ color: 'green' }}>{message}</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
-            <div className="center-image">
-                <img
-                    className="airplane-image"
-                    src={image}
-                    alt="Airplane"
-                    style={{ width: '55%', height: 'auto', borderRadius: '10px' }}
-                />
-            </div>
+
         </div>
     );
 };

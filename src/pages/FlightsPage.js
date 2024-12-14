@@ -4,6 +4,7 @@ import { fetchFlights } from '../services/api'; // Ensure this is implemented an
 import FlightTable from '../components/FlightPageTable';
 import '../styles/OtherPage.css';
 import backgroundImage from '../assets/Background01.jpg';
+import image from '../assets/Airplane01.png';
 
 const FlightsPage = () => {
     const [flights, setFlights] = useState([]);
@@ -22,6 +23,7 @@ const FlightsPage = () => {
                 setError(err.message);
             }
         };
+
         getFlights();
     }, []);
 
@@ -37,9 +39,14 @@ const FlightsPage = () => {
                 >
                 <div className="content-container">
             <h1>Flights</h1>
+             <div className="page-li">
             {error && <p className="error">Error: {error}</p>}
             <FlightTable flights={flights} />
         </div>
+        </div>
+            <div className="center-image">
+                <img className="airplane-image" src={image} alt="Airplane" style={{ width: '55%', height: 'auto', borderRadius: '10px' }} />
+                </div>
         </div>
     );
 };
