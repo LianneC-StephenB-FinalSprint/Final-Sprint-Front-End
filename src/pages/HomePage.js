@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FlightTable from '../components/FlightTable';
 import AirportSelector from '../components/AirportSelector';
-import { fetchFlights } from '../services/api';
+//import { fetchFlights } from '../services/api';
 import backgroundImage from '../assets/Background01.jpg';
 import image from '../assets/Airplane01.png';
 import '../styles/HomePage.css';

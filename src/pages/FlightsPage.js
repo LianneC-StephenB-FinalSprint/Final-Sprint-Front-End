@@ -4,7 +4,6 @@ import { fetchFlights } from '../services/api'; // Ensure this is implemented an
 import FlightTable from '../components/FlightPageTable';
 import '../styles/OtherPage.css';
 import backgroundImage from '../assets/Background01.jpg';
-import image from '../assets/Airplane01.png';
 
 const FlightsPage = () => {
     const [flights, setFlights] = useState([]);

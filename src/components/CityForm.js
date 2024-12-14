@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { createCity } from '../services/api'; // Import the API function
+//import React, { useState } from 'react';
+//import { createCity } from '../services/api'; // Import the API function
 
 const CityForm = ({ formData, handleChange, handleSubmit }) => {
     return (
