@@ -1,0 +1,35 @@
+name: React App CI
+
+# Trigger the workflow on push to any branch, or pull request
+on:
+  push:
+    branches:
+      - main  # Trigger only for the main branch or modify if needed
+  pull_request:
+    branches:
+      - main  # Trigger for PRs targeting the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # The OS for the runner (you can choose different OS as well)
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Checkout the code from the repository
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Specify the Node.js version (adjust to your app's needs)
+
+      - name: Install dependencies
+        run: |
+          npm install  # Install dependencies from package.json
+
+      - name: Run tests
+        run: |
+          npm test -- --coverage  # Run your tests (adjust according to your testing setup)
+
+      - name: Build React App
+        run: |
+          npm run build  # Build the app for production
