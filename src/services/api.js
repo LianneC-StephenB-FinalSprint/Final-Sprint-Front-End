@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api'; // Replace with your backend URL
+const API_BASE_URL = 'http://15.223.118.18:80/api'; // Replace with your backend URL
 
 // Create flight
 export const createFlight = async (flightData) => {
