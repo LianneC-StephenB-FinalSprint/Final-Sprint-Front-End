@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { fetchGates } from '../services/api';
 import backgroundImage from '../assets/Background01.jpg';
 import '../styles/OtherPage.css';
-import image from '../assets/Airplane01.png';
 
 const GatesPage = () => {
     const [gates, setGates] = useState([]);
@@ -32,9 +31,6 @@ const GatesPage = () => {
                     </li>
                 ))}
             </ul>
-        </div>
-        <div className="center-image">
-        <img className="airplane-image" src={image} alt="Airplane" style={{ width: '55%', height: 'auto', borderRadius: '10px' }} />
         </div>
         </div>
     );
